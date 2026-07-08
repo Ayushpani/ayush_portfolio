@@ -184,6 +184,11 @@
   }
   h1 .char:hover { color: var(--platinum); transform: translateY(-4%) rotate(0deg) !important; }
   .line-mask { overflow: hidden; display: block; padding: 0.14em 0.04em; margin: -0.14em -0.04em; }
+  h1 .split-line.platinum-text {
+    transform: translateY(120%);
+    transition: transform 1s cubic-bezier(0.22, 1, 0.36, 1) 0.15s;
+  }
+  h1 .split-line.platinum-text.shown { transform: translateY(0); }
 
   .platinum-text {
     background: linear-gradient(110deg, #86868B 20%, #FFFFFF 40%, #E5E4E2 60%, #86868B 80%);
@@ -449,7 +454,7 @@
   }
 
   /* ═══ WRITING / LINKS STRIP ═══ */
-  .links-strip { display: grid; grid-template-columns: repeat(5, 1fr); gap: 20px; }
+  .links-strip { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; }
   .link-card {
     text-decoration: none; color: inherit;
     padding: 32px; text-align: left;
@@ -888,11 +893,14 @@
     document.querySelectorAll('#heroTitle .char').forEach((c, i) => {
       setTimeout(() => { c.style.transform = 'translateY(0) rotate(0deg)'; }, i * 35);
     });
+    const plat = document.querySelector('#heroTitle .platinum-text');
+    if (plat) setTimeout(() => plat.classList.add('shown'), 250);
     setTimeout(() => pre.remove(), 1200);
   }
 
   /* ═══════════ SPLIT HERO TEXT INTO CHARS ═══════════ */
   document.querySelectorAll('#heroTitle .split-line').forEach(line => {
+    if (line.classList.contains('platinum-text')) return; // gradient clip breaks if split
     const txt = line.textContent;
     line.textContent = '';
     [...txt].forEach(ch => {
@@ -904,6 +912,8 @@
   });
   if (reduceMotion) {
     document.querySelectorAll('#heroTitle .char').forEach(c => c.style.transform = 'none');
+    const plat = document.querySelector('#heroTitle .platinum-text');
+    if (plat) plat.classList.add('shown');
   }
 
   /* ═══════════ THREE.JS: CHROME CORE + PARTICLE FIELD ═══════════ */
